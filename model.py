@@ -91,63 +91,12 @@ class DLinear_NN(nn.Module):
         
         self.Linear_Seasonal = nn.Sequential(
             nn.Linear(seq_len, pred_len),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(pred_len, 64),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(64, 128),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(128, 64),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(64, pred_len),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(pred_len, pred_len)  # если хочешь еще слои
         )
-
-        # Задаём веса первого линейного слоя
-        #with torch.no_grad():
-        #    self.Linear_Seasonal[0].weight = nn.Parameter(
-        #        (1 / seq_len) * torch.ones([pred_len, seq_len])
-        #    )
 
         # Аналогично для Linear_Trend
         self.Linear_Trend = nn.Sequential(
             nn.Linear(seq_len, pred_len),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(pred_len, 64),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(64, 128),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(128, 64),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(64, pred_len),  # первый слой
-            nn.ReLU(),
-            nn.Dropout(0.05),
-
-            nn.Linear(pred_len, pred_len)  # если хочешь еще слои
         )
-
-        #with torch.no_grad():
-        #    self.Linear_Trend[0].weight = nn.Parameter(
-        #        (1 / seq_len) * torch.ones([pred_len, seq_len])
-        #    )
 
     def forward(self, x: "torch.Tensor") -> "torch.Tensor":
         """Прямой проход модели.

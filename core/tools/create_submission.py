@@ -58,24 +58,12 @@ def create_submission(predictions):
     # Создание submission
     prev_ema = None
     rows = []
-    E_mu_Z_raw = []
-    R = []
-    s = []
-    p = []
 
-    for E_mu_Z_n in predictions:
-        ema_value = calculate_ema(prev_ema, float(E_mu_Z_n), alpha)
+    for E_mu_Z in predictions:
+        ema_value = calculate_ema(prev_ema, float(E_mu_Z), alpha)
         prev_ema = ema_value
         R_n, s_n, p_n = select_code_rate(ema_value, f_ec, R_range, n, d)
-        
-        E_mu_Z_raw.append(float(f"{E_mu_Z_n:.16f}"))
-        R.append(R_n)
-        s.append(s_n)
-        p.append(p_n)
-
-    # === Формируем строки ===
-    for E_mu_Z_n, R_n, s_n, p_n in zip(E_mu_Z_raw, R, s, p):
-        rows.append([f"{E_mu_Z_n:.16f}", R_n, s_n, p_n])
+        rows.append([f"{E_mu_Z:.16f}", R_n, s_n, p_n])
             
     submission_df = pd.DataFrame(rows)
     submission_df.to_csv('submission_pytorch.csv', header=False, index=False)
