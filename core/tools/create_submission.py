@@ -14,7 +14,7 @@ def create_submission(predictions):
 
     # Параметры для выбора LDPC кода
     alpha = 0.33
-    f_ec = 1.15
+    # f_ec = 1.15
     R_range = [round(0.50 + 0.05 * x, 2) for x in range(9)]
     n = 32000
     d = 4800
@@ -24,15 +24,6 @@ def create_submission(predictions):
         if prev_ema is None:
             return current_value
         return alpha * current_value + (1 - alpha) * prev_ema
-    
-    def ema_filter(values, alpha=0.33):
-        """Применяет экспоненциальное сглаживание к массиву."""
-        values = np.asarray(values, dtype=np.float64)
-        smoothed = np.empty_like(values)
-        smoothed[0] = values[0]
-        for i in range(1, len(values)):
-            smoothed[i] = alpha * values[i] + (1 - alpha) * smoothed[i - 1]
-        return smoothed
 
     def h(x):
         if x > 0:
@@ -59,7 +50,7 @@ def create_submission(predictions):
     prev_ema = None
     rows = []
 
-    for E_mu_Z in predictions:
+    for E_mu_Z, f_ec in zip(predictions, pd.read_csv('all_f_ec.csv')["f_EC"].to_list()):
         ema_value = calculate_ema(prev_ema, float(E_mu_Z), alpha)
         prev_ema = ema_value
         R_n, s_n, p_n = select_code_rate(ema_value, f_ec, R_range, n, d)
